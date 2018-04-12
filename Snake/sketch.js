@@ -2,25 +2,34 @@ var snake = [];
 var prevSnake = [];
 var food;
 var scl = 20;
+var score;
+var highscore = 0;
 function setup() {
   createCanvas(600, 600);
   snake[0] = new Snake();
   food = new Food();
   frameRate(10);
+  score = 0;
   
 }
 
 function draw() {
   background(51);
+  showScore();
   if (snake[0].gameover) {
-    
+    gameOver();
   } else {
+    
     if (dist(snake[0].x, snake[0].y, food.x, food.y) < 2 ){
     food.update();
     append(snake, new Snake());
-  }
+    score += 1;
+    if (score >= highscore) {
+      highscore = score;
+    }
+    }
   for (var i = snake.length - 1; i >= 0; i--) {
-    if (i == 0) {
+    if (i === 0) {
       snake[i].update();
     } else {
       var snakeBefore = snake[i - 1];
@@ -33,16 +42,31 @@ function draw() {
       prevSnake[i - 1] = [tup];
     }
     snake[i].show();
- 
-    
   }
+  
   food.show();
 
   }
+}
+
+function showScore() {
+  background(50);
+  noStroke();
+  fill(255);
   
+  text("Score: " + score, 0, 580);
+  text("Highscore: " + highscore, 0, 595)
+}
+
+function gameOver() {
+  alert("Game Over! Press okay to restart.");
+  reset();
   
-  
-  
+}
+
+function reset() {
+  setup();
+  prevSnake = []
 }
 
 function keyPressed() {
